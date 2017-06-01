@@ -47,8 +47,8 @@ public class FragmentSecond extends Fragment {
 
         tvSms = (TextView) view.findViewById(R.id.tvFrag2);
         btnRetrieve = (Button) view.findViewById(R.id.btnRetrieveFrag2);
-        etWord = (EditText)view.findViewById(R.id.etFrag2);
-        btnEmail = (Button)view.findViewById(R.id.btnEmail2);
+        etWord = (EditText) view.findViewById(R.id.etFrag2);
+        btnEmail = (Button) view.findViewById(R.id.btnEmail2);
 
         btnEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,9 +58,9 @@ public class FragmentSecond extends Fragment {
                 i.setData(Uri.parse("mailto:"));
                 i.setType("text/plain");
 
-                i.putExtra(Intent.EXTRA_EMAIL  , recipients);
+                i.putExtra(Intent.EXTRA_EMAIL, recipients);
                 i.putExtra(Intent.EXTRA_SUBJECT, "SMS CONTENT");
-                i.putExtra(Intent.EXTRA_TEXT  , tvSms.getText().toString());
+                i.putExtra(Intent.EXTRA_TEXT, tvSms.getText().toString());
 
                 try {
                     startActivity(Intent.createChooser(i, "Send mail..."));
@@ -85,58 +85,61 @@ public class FragmentSecond extends Fragment {
                 }
 
                 String text = etWord.getText().toString();
-                    // Create all messages URI
-                    Uri uri = Uri.parse("content://sms");
-                    // The columns we want
-                    //  date is when the message took place
-                    //  address is the number of the other party
-                    //  body is the message content
-                    //  type 1 is received, type 2 sent
-                    String[] reqCols = new String[]{"date", "address", "body", "type"};
+                // Create all messages URI
+                Uri uri = Uri.parse("content://sms");
+                // The columns we want
+                //  date is when the message took place
+                //  address is the number of the other party
+                //  body is the message content
+                //  type 1 is received, type 2 sent
+                String[] reqCols = new String[]{"date", "address", "body", "type"};
 
-                    // Get Content Resolver object from which to
-                    //  query the content provider
-                    ContentResolver cr = getActivity().getContentResolver();
+                // Get Content Resolver object from which to
+                //  query the content provider
+                ContentResolver cr = getActivity().getContentResolver();
 
-                    // The filter String
-                    String filter = "body LIKE ? ";
-                    String[] separated = text.split(" ");
-                    for (int i = 0; i < separated.length; i++) {
-                        separated[i] = "%"+separated[i]+"%";
-                        if(i != 0) {
-                            filter += " OR body LIKE ? ";
-                        }
-
+                // The filter String
+                String filter = "body LIKE ? ";
+                String[] separated = text.split(" ");
+                for (int i = 0; i < separated.length; i++) {
+                    separated[i] = "%" + separated[i] + "%";
+                    if (i != 0) {
+                        filter += " OR body LIKE ? ";
                     }
+                }
 
-                    // Fetch SMS Message from Built-in Content Provider
-                    Cursor cursor = cr.query(uri, reqCols, filter, separated, null);
+                // The matches for the ?
+                String[] filterArgs = separated;
 
-                    String smsBody = "";
+
+                // Fetch SMS Message from Built-in Content Provider
+                Cursor cursor = cr.query(uri, reqCols, filter, filterArgs, null);
+
+                String smsBody = "";
 
 //                // Fetch SMS Message from Built-in Content Provider
 //                Cursor cursor = cr.query(uri, reqCols, null, null, null);
 //                String smsBody = "";
 
-                    if (cursor.moveToFirst()) {
-                        do {
-                            long dateInMillis = cursor.getLong(0);
-                            String date = (String) DateFormat
-                                    .format("dd MMM yyyy h:mm:ss aa", dateInMillis);
-                            String address = cursor.getString(1);
-                            String body = cursor.getString(2);
-                            String type = cursor.getString(3);
-                            if (type.equalsIgnoreCase("1")) {
-                                type = "Inbox:";
-                            } else {
-                                type = "Sent:";
-                            }
-                            smsBody += type + " " + address + "\n at " + date
-                                    + "\n\"" + body + "\"\n\n";
-                        } while (cursor.moveToNext());
-                    }
-                    tvSms.setText(smsBody);
+                if (cursor.moveToFirst()) {
+                    do {
+                        long dateInMillis = cursor.getLong(0);
+                        String date = (String) DateFormat
+                                .format("dd MMM yyyy h:mm:ss aa", dateInMillis);
+                        String address = cursor.getString(1);
+                        String body = cursor.getString(2);
+                        String type = cursor.getString(3);
+                        if (type.equalsIgnoreCase("1")) {
+                            type = "Inbox:";
+                        } else {
+                            type = "Sent:";
+                        }
+                        smsBody += type + " " + address + "\n at " + date
+                                + "\n\"" + body + "\"\n\n";
+                    } while (cursor.moveToNext());
                 }
+                tvSms.setText(smsBody);
+            }
 
 
         });
