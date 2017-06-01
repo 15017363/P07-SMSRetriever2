@@ -56,7 +56,7 @@ public class FragmentSecond extends Fragment {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 String[] recipients = new String[]{"jason_lim@rp.edu.sg"};
                 i.setData(Uri.parse("mailto:"));
-                i.setType("text/plain");
+                i.setType("message/rfc822");
 
                 i.putExtra(Intent.EXTRA_EMAIL, recipients);
                 i.putExtra(Intent.EXTRA_SUBJECT, "SMS CONTENT");

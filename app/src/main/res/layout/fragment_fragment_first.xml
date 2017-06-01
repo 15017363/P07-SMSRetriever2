@@ -20,17 +20,25 @@
         android:layout_height="wrap_content"
         android:inputType="number" />
 
-    <Button
-        android:id="@+id/btnRetrieveFrag1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Retrieve SMS" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnEmail1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email" />
+        <Button
+            android:id="@+id/btnRetrieveFrag1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Retrieve SMS" />
+
+        <Button
+            android:id="@+id/btnEmail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Email" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
